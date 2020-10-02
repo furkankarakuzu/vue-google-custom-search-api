@@ -50,7 +50,7 @@ export default {
   methods : {
     async search(start,img=undefined){
       do{
-        let data = await axios.get('https://customsearch.googleapis.com/customsearch/v1?cx=0f4db0db844684834&q='+this.query+'&key=AIzaSyAnFOsg4RV2tFzoafif1TjwrbXSPqfF2SE&start='+(img ? start*10:start)+'&num=10')
+        let data = await axios.get('https://customsearch.googleapis.com/customsearch/v1?cx=YOUR_CX_CODE&q='+this.query+'&key=YOUR_API_KEY&start='+(img ? start*10:start)+'&num=10')
         .then( res=>{
           if(img){start++}
           return res.data.items
