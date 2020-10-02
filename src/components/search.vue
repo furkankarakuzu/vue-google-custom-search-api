@@ -4,7 +4,7 @@
     <div class="arama">
       <input type="text" v-model="query" @keyup.enter="search(1)"> <br>
       <button @click="search(1)">Furkan ile Ara</button>
-      <button @click="searchImg" class="imgAra">Furkan ile Görsel Ara</button>
+      <button @click="search(1,true)" class="imgAra">Furkan ile Görsel Ara</button>
     </div>
     <br><br>
     <div v-if="querySearch">
@@ -48,32 +48,21 @@ export default {
     }
   },
   methods : {
-    search(start){
-      axios.get('https://customsearch.googleapis.com/customsearch/v1?cx=YOUR_CX_CODE&q='+this.query+'&key=YOUR_API_KEY&start='+start+'&num=10')
+    async search(start,img=undefined){
+      do{
+        let data = await axios.get('https://customsearch.googleapis.com/customsearch/v1?cx=0f4db0db844684834&q='+this.query+'&key=AIzaSyAnFOsg4RV2tFzoafif1TjwrbXSPqfF2SE&start='+(img ? start*10:start)+'&num=10')
         .then( res=>{
-          this.queryImgSearch=false
-          this.querySearch=true
-          this.items=null
-          this.items=res.data.items
-      })
+          if(img){start++}
+          return res.data.items
+        })
+        this.queryImgSearch=false
+        this.querySearch=true
+        this.items=null
+        this.items=data
+      }
+      while(img && start<5)
       scroll(0, 0)
     },
-    searchImg(){
-      this.queryImgSearch=true
-      this.querySearch=false
-      this.itemsImg=[]
-      for (let i = 1; i < 52; i+=10) {
-        axios.get('https://customsearch.googleapis.com/customsearch/v1?cx=YOUR_CX_CODE&q='+this.query+'&key=YOUR_API_KEY&start='+i+'&num=10')
-        .then( res=>{
-          res.data.items.forEach(item => {
-            if(item.pagemap.cse_image){
-              this.itemsImg.push(item)
-            }
-          })
-        })
-      }
-      scroll(0, 0)
-    }
   }
 }
 </script>
